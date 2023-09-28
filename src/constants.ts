@@ -128,7 +128,6 @@ export const towParamsFunc = [
   "unzipWith",
   "update",
   "updateWith",
-  "values",
   "valuesIn",
   "without",
   "words",
@@ -232,6 +231,7 @@ export const towParamsFunc = [
 ];
 
 export const oneParamFunc = [
+  "values",
   "round",
   "size",
   "parseInt",
@@ -306,5 +306,5 @@ export const oneParamFunc = [
   "trimStart",
   "upperCase",
   "upperFirst",
-  "first"
+  "first",
 ];

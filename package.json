@@ -2,15 +2,12 @@
   "name": "lodash-imports",
   "displayName": "Lodash imports",
   "description": "Import lodash modules snippets.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.66.0"
   },
   "categories": [
     "Other"
-  ],
-  "activationEvents": [
-    "*"
   ],
   "main": "./dist/extension.js",
   "contributes": {},
@@ -23,8 +20,9 @@
     "watch-tests": "tsc -p . -w --outDir out",
     "lint": "eslint src --ext ts"
   },
-  "publisher": "Umesh-Malik",
+  "publisher": "UmeshMalik",
   "repository": "https://github.com/Umeshmalik/lodash-imports-vscode",
+  "icon": "assets/lodash.png",
   "devDependencies": {
     "@types/lodash": "^4.14.199",
     "@types/node": "14.x",
