@@ -33,6 +33,7 @@ export function activate(context: vscode.ExtensionContext) {
           const importLine = `import _${name} from 'lodash/${name}';`;
           if (!_includes(document.getText(), importLine)) {
             let lineToAdd = -1;
+            let firstLine = -1;
             const rawFile = document.getText();
             const splittedRawFile = _map(
               _split(rawFile, newLine),
@@ -41,6 +42,9 @@ export function activate(context: vscode.ExtensionContext) {
             for (let i = 0; i < _size(splittedRawFile); i++) {
               if (_includes(_get(splittedRawFile, i), "lodash/")) {
                 lineToAdd = i;
+                if (firstLine === -1) {
+                  firstLine = i;
+                }
               }
             }
             const stringBefore = _join(
@@ -48,6 +52,20 @@ export function activate(context: vscode.ExtensionContext) {
               " "
             );
             const currentLineSize = _size(stringBefore) ?? 0;
+            const stringBeforeForComment = _join(
+              _slice(splittedRawFile, 0, firstLine),
+              " "
+            );
+            const sizeUptoFirstLodashImport = _size(stringBeforeForComment);
+            if (
+              lodashComment.toLowerCase() !==
+              _get(splittedRawFile, firstLine - 1)
+            ) {
+              editBuilder.insert(
+                document.positionAt(sizeUptoFirstLodashImport),
+                newLine + lodashComment
+              );
+            }
             if (lineToAdd === -1) {
               editBuilder.insert(
                 document.positionAt(0),
