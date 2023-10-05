@@ -82,6 +82,8 @@ export function activate(context: vscode.ExtensionContext) {
       }
     }
   );
+
+
   const provider = vscode.languages.registerCompletionItemProvider(
     ["javascript", "typescript"],
     {
@@ -91,7 +93,8 @@ export function activate(context: vscode.ExtensionContext) {
         token: vscode.CancellationToken,
         context: vscode.CompletionContext
       ) {
-        // return all completion items as array
+        // ... (Your existing code)
+
         return _map([...oneParamFunc, ...towParamsFunc], (method: string) => {
           const snippetCompletion = new vscode.CompletionItem(`_${method}`);
           snippetCompletion.filterText = `_${method}`;
@@ -99,20 +102,36 @@ export function activate(context: vscode.ExtensionContext) {
           const str = _includes(oneParamFunc, method)
             ? `_${method}($1)`
             : `_${method}($1, $2)`;
-          snippetCompletion.insertText = new vscode.SnippetString(str);
+
+          const lineText = document.lineAt(position.line).text;
+          const textAfterCursor = lineText.slice(position.character);
+
+          if (textAfterCursor.charAt(0) === '(') {
+            // If there's an open parenthesis after the cursor, add only the method name
+            snippetCompletion.insertText = new vscode.SnippetString(`_${method}`);
+          } else {
+            // If not, add the method with parentheses
+            snippetCompletion.insertText = new vscode.SnippetString(str);
+          }
+
           snippetCompletion.command = {
             command: "extension.import-lodash-sub-module",
             arguments: [method],
             title: "import-lodash-sub-module...",
           };
+
           return snippetCompletion;
         });
       },
     }
   );
 
+
   context.subscriptions.push(provider);
+
+
 }
+
 
 // this method is called when your extension is deactivated
 export function deactivate() {}
