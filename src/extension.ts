@@ -1,3 +1,5 @@
+
+// Lodash
 import _join from "lodash/join";
 import _slice from "lodash/slice";
 import _includes from "lodash/includes";
@@ -5,7 +7,7 @@ import _get from "lodash/get";
 import _map from "lodash/map";
 import _split from "lodash/split";
 import _size from "lodash/size";
-import _lowerCase from "lodash/lowerCase";
+import _isEqual from 'lodash/isEqual';
 
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
@@ -40,7 +42,9 @@ export function activate(context: vscode.ExtensionContext) {
               (line: string) => line.toLowerCase()
             );
             for (let i = 0; i < _size(splittedRawFile); i++) {
-              if (_includes(_get(splittedRawFile, i), "lodash/")) {
+              const currentLine = _get(splittedRawFile, i);
+              const initailWord = _split(currentLine, " ").shift();
+              if (_includes(currentLine, "lodash/") && _isEqual(initailWord, "import")) {
                 lineToAdd = i;
                 if (firstLine === -1) {
                   firstLine = i;
