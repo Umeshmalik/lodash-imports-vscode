@@ -9,14 +9,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Print things
-        run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }}  event. ${{github.ref}} ${{github.event.pull_request.title}}"
+        run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }}  event. ${{github.base_ref}}"
 
       - name: Increase package.json version
-        if: startsWith(github.event.pull_request.title, 'major')
+        if: startsWith(github.base_ref, 'major')
         run: npm version major
-      - if: startsWith(github.event.pull_request.title, 'minor')
+      - if: startsWith(github.base_ref, 'minor')
         run: npm version minor
-      - if: startsWith(github.event.pull_request.title, 'bug')
+      - if: startsWith(github.base_ref, 'bug')
         run: npm version patch
 
   deploy:
