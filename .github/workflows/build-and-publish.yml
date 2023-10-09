@@ -4,6 +4,17 @@ on:
       - master
 name: Deploy Extension
 jobs:
+  version_update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Increase package.json version
+        if: startsWith(github.event.pull_request.title, 'major')
+        run: npm version major
+      - if: startsWith(github.event.pull_request.title, 'minor')
+        run: npm version minor
+      - if: startsWith(github.event.pull_request.title, 'bug')
+        run: npm version patch
+
   deploy:
     runs-on: ubuntu-latest
     steps:
