@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Print things
-        run: echo ${{github.event.pull_request.title}} ${{startsWith(github.event.pull_request.title, 'bug')}}
+        run: echo ${{github.event.pull_request}} ${{startsWith(github.event.pull_request.title, 'bug')}}
 
       - name: Increase package.json version
         if: startsWith(github.event.pull_request.title, 'major')
