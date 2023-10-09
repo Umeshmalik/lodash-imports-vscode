@@ -1,0 +1,38 @@
+name: Build and Publish VS Code Extension
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Determine version bump
+        id: version
+        run: echo ::set-output name=bump::$(echo ${{ github.event.pull_request.title }} | grep -E -o "major|minor|bug fix" || echo "patch")
+
+      - name: Bump version
+        run: npm version ${{ steps.version.outputs.bump }}
+
+      - name: Build extension
+        run: npm run build # Adjust this to your build command
+
+      - name: Publish to VS Code Marketplace
+        run: |
+          vsce login ${{ secrets.PUBLISHER_NAME }}
+          vsce publish -p ${{ secrets.VSCODE_PAT }} # Set up VSCODE_PAT in your GitHub repository secrets
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} # Set up NPM_TOKEN in your GitHub repository secrets
