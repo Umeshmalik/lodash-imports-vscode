@@ -30,6 +30,7 @@ jobs:
         run: npm version minor
       - if: startsWith(github.event.pull_request.title, 'bug')
         run: npm version patch
+        
       - name: Build extension
         run: vsce package
       - name: Push extension to marketplace
