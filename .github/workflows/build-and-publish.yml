@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Print things
-        run: echo ${{github.event.pull_request}} ${{startsWith(github.event.pull_request.title, 'bug')}}
+        run: echo ${{github.event.pull_request}} ${{startsWith(github.event.pull_request.title, 'bug')}} bug
 
       - name: Increase package.json version
         if: startsWith(github.event.pull_request.title, 'major')
