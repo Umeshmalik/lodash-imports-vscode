@@ -11,13 +11,18 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - uses: oven-sh/setup-bun@v1
       - name: Use Node.js 16
         uses: actions/setup-node@v3
-      - uses: oven-sh/setup-bun@v1
         with:
           node-version: 16
+      - uses: lannonbr/vsce-action@3
+        with:
+            args: "publish -p $VSCE_TOKEN"
+        env:
+          VSCE_TOKEN: ${{ secrets.VSCODE_PAT }}
       - name: Install dependencies
-        run: npm install
+        run: bun install
       - name: Increase package.json version
         if: startsWith(github.event.pull_request.title, 'major')
         run: npm version major
@@ -26,6 +31,6 @@ jobs:
       - if: startsWith(github.event.pull_request.title, 'bug')
         run: npm version patch
       - name: Build extension
-        run: bun build
+        run: vsce package
       - name: Push extension to marketplace
         run: vsce publish
