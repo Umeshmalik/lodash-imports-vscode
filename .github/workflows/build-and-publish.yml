@@ -16,11 +16,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-      - uses: lannonbr/vsce-action@3.0.0
+      - name: Publish extension
+        id: publisher
+        uses: sigma/vsce-publish-action@v0.0.2
         with:
-            args: "publish -p $VSCE_TOKEN"
-        env:
-          VSCE_TOKEN: ${{ secrets.VSCODE_PAT }}
+          vsce_token: ${{ secrets.VSCODE_PAT }}
+          build_pkg: yes
       - name: Install dependencies
         run: bun install
       - name: Increase package.json version
@@ -30,7 +31,7 @@ jobs:
         run: npm version minor
       - if: startsWith(github.event.pull_request.title, 'bug')
         run: npm version patch
-        
+
       - name: Build extension
         run: vsce package
       - name: Push extension to marketplace
