@@ -1,4 +1,3 @@
-
 // Lodash
 import _join from "lodash/join";
 import _slice from "lodash/slice";
@@ -7,7 +6,7 @@ import _get from "lodash/get";
 import _map from "lodash/map";
 import _split from "lodash/split";
 import _size from "lodash/size";
-import _isEqual from 'lodash/isEqual';
+import _isEqual from "lodash/isEqual";
 
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
@@ -16,12 +15,9 @@ import { oneParamFunc, towParamsFunc } from "./constants";
 
 const newLine = "\n";
 const lodashComment = "// Lodash";
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
+
 export function activate(context: vscode.ExtensionContext) {
-  // Use the console to output diagnostic information (console.log) and errors (console.error)
   // This line of code will only be executed once when your extension is activated
-  // console.log('Congratulations, your extension is now active!');
   vscode.commands.registerCommand(
     "extension.import-lodash-sub-module",
     function (name) {
@@ -43,8 +39,11 @@ export function activate(context: vscode.ExtensionContext) {
             );
             for (let i = 0; i < _size(splittedRawFile); i++) {
               const currentLine = _get(splittedRawFile, i);
-              const initailWord = _split(currentLine, " ").shift();
-              if (_includes(currentLine, "lodash/") && _isEqual(initailWord, "import")) {
+              const initialWord = _split(currentLine, " ").shift();
+              if (
+                _includes(currentLine, "lodash/") &&
+                _isEqual(initialWord, "import")
+              ) {
                 lineToAdd = i;
                 if (firstLine === -1) {
                   firstLine = i;
@@ -63,7 +62,8 @@ export function activate(context: vscode.ExtensionContext) {
             const sizeUptoFirstLodashImport = _size(stringBeforeForComment);
             if (
               lodashComment.toLowerCase() !==
-              _get(splittedRawFile, firstLine - 1)
+                _get(splittedRawFile, firstLine - 1) &&
+              lineToAdd !== -1
             ) {
               editBuilder.insert(
                 document.positionAt(sizeUptoFirstLodashImport),
@@ -87,7 +87,6 @@ export function activate(context: vscode.ExtensionContext) {
     }
   );
 
-
   const provider = vscode.languages.registerCompletionItemProvider(
     ["javascript", "typescript"],
     {
@@ -110,9 +109,11 @@ export function activate(context: vscode.ExtensionContext) {
           const lineText = document.lineAt(position.line).text;
           const textAfterCursor = lineText.slice(position.character);
 
-          if (textAfterCursor.charAt(0) === '(') {
+          if (textAfterCursor.charAt(0) === "(") {
             // If there's an open parenthesis after the cursor, add only the method name
-            snippetCompletion.insertText = new vscode.SnippetString(`_${method}`);
+            snippetCompletion.insertText = new vscode.SnippetString(
+              `_${method}`
+            );
           } else {
             // If not, add the method with parentheses
             snippetCompletion.insertText = new vscode.SnippetString(str);
@@ -130,12 +131,8 @@ export function activate(context: vscode.ExtensionContext) {
     }
   );
 
-
   context.subscriptions.push(provider);
-
-
 }
-
 
 // this method is called when your extension is deactivated
 export function deactivate() {}
