@@ -55,21 +55,6 @@ export function activate(context: vscode.ExtensionContext) {
               " "
             );
             const currentLineSize = _size(stringBefore) ?? 0;
-            const stringBeforeForComment = _join(
-              _slice(splittedRawFile, 0, firstLine),
-              " "
-            );
-            const sizeUptoFirstLodashImport = _size(stringBeforeForComment);
-            if (
-              lodashComment.toLowerCase() !==
-                _get(splittedRawFile, firstLine - 1) &&
-              lineToAdd !== -1
-            ) {
-              editBuilder.insert(
-                document.positionAt(sizeUptoFirstLodashImport),
-                newLine + lodashComment
-              );
-            }
             if (lineToAdd === -1) {
               editBuilder.insert(
                 document.positionAt(0),
